@@ -15,6 +15,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                        forCellReuseIdentifier: SimpleTableViewCell.identifier)
         table.register(ImageTableViewCell.self,
                        forCellReuseIdentifier: ImageTableViewCell.identifier)
+        table.register(StoryTableViewCell.self,
+                       forCellReuseIdentifier: StoryTableViewCell.identifier)
+        table.register(BannerTableViewCell.self,
+                       forCellReuseIdentifier: BannerTableViewCell.identifier)
         
         return table
     }()
@@ -30,6 +34,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        tableView.showsVerticalScrollIndicator = false
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,8 +42,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: BannerTableViewCell.identifier, for: indexPath) as! BannerTableViewCell
+            cell.configure()
+            return cell
+        }
+        
         if indexPath.row < 5 {
             let cell = tableView.dequeueReusableCell(withIdentifier: ImageTableViewCell.identifier, for: indexPath) as! ImageTableViewCell
+            cell.configure()
+            return cell
+        }
+        
+        if indexPath.row < 10 && indexPath.row > 5 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.identifier, for: indexPath) as! StoryTableViewCell
             cell.configure()
             return cell
         }
@@ -49,7 +66,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let height = indexPath.row < 5 ? 110.0 : 40.0
+        var height = 0.0
+        if indexPath.row == 0 {
+            height = 260
+        }else{
+            height =  indexPath.row < 10 ? 110.0 : 140.0
+        }
         return CGFloat(height)
     }
 
